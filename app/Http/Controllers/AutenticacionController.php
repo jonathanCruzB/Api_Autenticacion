@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Hash;
 class AutenticacionController extends Controller
 {
  
-    public function registro(Request $request){
+    public function registro(Request $request)
+    {
         
         $validator= Validator::make($request->all(),[
             'name'=>'required|string|max:50',
@@ -22,7 +23,8 @@ class AutenticacionController extends Controller
 
         ]);
 
-        if($validator->fails()){
+        if($validator->fails())
+        {
 
             return response()->json($validator->errors());
         }
@@ -64,13 +66,14 @@ class AutenticacionController extends Controller
 
     }
 
-    public function salir(){
+    public function salir(Request $request){
 
-        auth()->user()->tokens()->delete();
+        $request ->user()->tokens()->delete();
 
         return response()->Json([
-            'mensaje'=>'cesion cerrada'
-        ]);
+            'mensaje'=>'sesion cerrada'
+        ],200);
     }
 
+    
 }
