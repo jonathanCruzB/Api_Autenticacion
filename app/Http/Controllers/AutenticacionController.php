@@ -36,11 +36,41 @@ class AutenticacionController extends Controller
         $token= $usuario->createToken('auth_token')->plainTextToken;
         
         return response()->Json([
-            'data'=>$usuario, 
+            'datos'=>$usuario, 
             'tokenDeAcceso'=> $token,
             'tipoDeToken'=>'Bearer'
         ]);
     
+     }
+
+    public function ingreso(Request $request){
+
+        if(!Auth::attempt($request->only('email', 'password')))
+        {
+            return response()->json([
+                'message'=>'No esta autorizado'
+            ],401);
+        }
+        $user = User::where('email', $request['email'])->firstOrFail();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->Json([
+            'message'=>'Bienvenido '.$user->name,
+            'token'=> $token,
+            'tipo de token'=>'Bearer',
+            'Usuario'=> $user
+        ]);
+
+
+    }
+
+    public function salir(){
+
+        auth()->user()->tokens()->delete();
+
+        return response()->Json([
+            'mensaje'=>'cesion cerrada'
+        ]);
     }
 
 }
