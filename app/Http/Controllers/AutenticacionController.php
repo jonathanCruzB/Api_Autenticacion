@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-//use Validator;
 use App\Models\User;
 use Illuminate\Validation\Rules\Unique;
 use stdClass;
 use Illuminate\Support\Facades\Hash;
-
-
 
 class AutenticacionController extends Controller
 {
@@ -20,7 +17,7 @@ class AutenticacionController extends Controller
         
         $validator= Validator::make($request->all(),[
             'name'=>'required|string|max:50',
-            'email'=>'required|string|email|max:255|Unique:Users',
+            'email'=>'required|string|email|max:255|unique:users',
             'password'=> 'required|string|min:8'
 
         ]);
@@ -33,10 +30,10 @@ class AutenticacionController extends Controller
         $usuario=User::create([
             'name'=>$request->name,
             'email'=> $request->email,
-            'password'=> $request->Hash::make($request->password)
+            'password'=> Hash::make($request->password)
         ]);
 
-        $token= $usuario->createToken('auth_token')->plaintTextToken;
+        $token= $usuario->createToken('auth_token')->plainTextToken;
         
         return response()->Json([
             'data'=>$usuario, 
